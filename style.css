@@ -33,3 +33,27 @@
 .reading .slide-body figure img{max-height:700px}.reading .slide-body .restored-diagram img{max-height:none}
 @media(max-width:1000px){.tools .part-jump{display:none}}
 @media(max-width:800px){.slide-body .chapter-heading,.slide-body .section-heading{font-size:27px}.cover .cover-title{font-size:clamp(22px,7.1vw,34px)}.cover .paragraph{font-size:19px}.slide-body figure img{max-height:none}.mapping,.mapping tbody,.mapping tr,.mapping td{display:block}.mapping thead{display:none}.mapping tr{padding:10px 0 18px;border-bottom:2px solid #bed7cb}.mapping td{padding:8px 0;border:0}.mapping td:before{content:attr(data-label);display:block;font-size:12px;font-weight:500;color:var(--muted);margin-bottom:4px}.mapping td:first-child{font-size:21px}.mapping td:first-child:before{display:none}.divider .chapter-heading{font-size:32px}.slide-body .restored-diagram img{min-width:600px}.restored-diagram{overflow:auto}}
+
+/* Chapter navigation: stable slide numbers and a visible practice shortcut. */
+.tools #tocButton{background:#dcebe3;color:#104f48;font-weight:700}
+.tools .practice-jump{background:var(--accent);color:white;font-weight:700;margin-left:5px}
+.tools .practice-jump:hover{background:#0c514a}
+.cover-actions{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.cover-actions .secondary{border:1px solid var(--accent);color:var(--accent);padding:12px 20px;border-radius:3px;font-size:15px;font-weight:700}
+.cover-actions .start-link{font-size:14px;color:var(--muted);padding:10px}
+#tocDialog{width:min(850px,94vw);padding:24px;overflow:hidden}
+#tocList{height:calc(100% - 112px);padding-right:8px;padding-bottom:20px;overscroll-behavior:contain}
+#tocList h3{margin:16px 0 9px;font-size:14px}
+.toc-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.toc-entry,.toc-practice,.toc-page{display:flex;align-items:center;justify-content:space-between;gap:12px;color:var(--ink);border:1px solid var(--line);border-radius:5px;padding:12px 14px;font-size:14px;line-height:1.55;text-decoration:none}
+.toc-entry small,.toc-practice small,.toc-page small{font-size:11px;color:var(--muted);white-space:nowrap}
+.toc-entry:hover,.toc-page:hover{background:var(--highlight);border-color:#7cae9a;text-decoration:none}
+.toc-entry[aria-current=page],.toc-page[aria-current=page]{border-color:var(--accent);background:var(--highlight)}
+.toc-practice{background:var(--accent);border-color:var(--accent);color:white;font-size:18px;font-weight:700;margin-bottom:12px;padding:16px}
+.toc-practice small{color:#e0f0e6}.toc-practice:hover{background:#0c514a;text-decoration:none}
+.toc-quick{display:flex;gap:10px}.toc-quick .toc-entry{flex:1;padding:9px 13px}
+.toc-steps .toc-entry{font-size:13px}.toc-page{margin-bottom:5px;padding:10px 12px;border-color:transparent}
+.toc-all-pages{border-top:1px solid var(--line);margin-top:20px;padding-top:14px}
+.toc-all-pages summary{cursor:pointer;font-size:14px;color:var(--accent);font-weight:700;padding:4px}
+@media(max-width:800px){.appbar{padding:0 12px;gap:10px}.tools .practice-long{display:none}.tools #modeButton,.tools #fontButton{font-size:11px;padding:8px 5px}.tools #tocButton,.tools .practice-jump{font-size:12px;padding:9px 8px}.cover-actions{gap:10px;margin-top:20px}.cover-actions .primary,.cover-actions .secondary{width:100%;font-size:14px;padding:12px 15px;text-align:center}.cover-actions .start-link{width:100%;padding:4px}.toc-grid{grid-template-columns:1fr}.toc-practice{font-size:16px;gap:6px;padding:12px}.toc-entry{padding:11px 12px}.toc-quick{gap:6px}.toc-quick .toc-entry{font-size:12px;padding:8px}.toc-quick small{font-size:10px}#tocDialog{padding:16px}#tocList{padding-right:2px}}
+@media(max-width:430px){.tools #fontButton{display:none}.tools #modeButton{font-size:11px}.appbar .brand{font-size:12px}}

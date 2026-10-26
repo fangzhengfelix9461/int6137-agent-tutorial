@@ -15,8 +15,35 @@ document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(+b.dataset.go
 document.querySelector('#modeButton').onclick=e=>{reading=!reading;document.body.classList.toggle('reading',reading);e.currentTarget.textContent=reading?'返回翻页':'连续阅读';e.currentTarget.setAttribute('aria-pressed',reading);go(current);};
 document.querySelector('#fontButton').onclick=e=>{const on=document.body.classList.toggle('large-text');e.currentTarget.textContent=on?'恢复字号':'字大一点';setTimeout(hint,100);};
 document.querySelector('#fullButton').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch{document.querySelector('#fullButton').textContent='请使用 F11';}};
-function renderToc(query=''){const list=document.querySelector('#tocList');list.replaceChildren();let chapter='';labels.forEach((d,i)=>{if(query&&!d.text.toLowerCase().includes(query.toLowerCase())&&!d.title.toLowerCase().includes(query.toLowerCase()))return;if(chapter!==d.chapter){chapter=d.chapter;const h=document.createElement('h3');h.textContent=chapter;list.append(h);}const b=document.createElement('button'),n=document.createElement('span');n.textContent=String(i+1).padStart(2,'0');b.append(n,document.createTextNode(d.title));if(i===current)b.classList.add('active');b.onclick=()=>{toc.close();go(i);};list.append(b);});if(!list.childElementCount)list.textContent='没有找到相关内容。';}
-document.querySelector('#tocButton').onclick=()=>{renderToc();document.querySelector('#search').value='';toc.showModal();};document.querySelector('#search').oninput=e=>renderToc(e.target.value);
+const chapters=slides.flatMap((s,i)=>s.classList.contains('divider')?[{page:i+1,title:s.dataset.title,part:s.dataset.part}]:[]);
+const practice=chapters.find(c=>c.title.startsWith('八 '));
+function tocLink(page,title,className='toc-entry'){
+ const a=document.createElement('a'),name=document.createElement('span'),number=document.createElement('small');
+ a.href='#'+page;a.className=className;a.dataset.tocPage=page;name.textContent=title;number.textContent='第 '+page+' 页 →';a.append(name,number);
+ if(page===current+1)a.setAttribute('aria-current','page');
+ a.onclick=e=>{if(e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;e.preventDefault();toc.close();go(page-1);};return a;
+}
+function pageList(list,query=''){
+ let chapter='';labels.forEach((d,i)=>{if(query&&!d.text.toLowerCase().includes(query)&&!d.title.toLowerCase().includes(query))return;if(chapter!==d.chapter){chapter=d.chapter;const h=document.createElement('h3');h.textContent=chapter;list.append(h);}list.append(tocLink(i+1,d.title,'toc-page'));});
+ if(!list.childElementCount)list.textContent='没有找到相关内容。';
+}
+function renderToc(query=''){
+ const list=document.querySelector('#tocList');list.replaceChildren();query=query.trim().toLowerCase();
+ if(query){pageList(list,query);return;}
+ if(practice)list.append(tocLink(practice.page,'第八部分 · CodeBuddy 动手实践','toc-practice'));
+ const quick=document.createElement('div');quick.className='toc-quick';quick.append(tocLink(2,'开场案例'),tocLink(152,'课后资源'));list.append(quick);
+ for(const part of ['上半部分','下半部分']){
+  const h=document.createElement('h3');h.textContent=part;list.append(h);
+  const grid=document.createElement('div');grid.className='toc-grid';
+  chapters.filter(c=>c.part===part).forEach(c=>{const title=c.title.replace(/（[上下]半部分）/g,'').replace(/\s+/g,' ').trim();grid.append(tocLink(c.page,title));});list.append(grid);
+ }
+ const heading=document.createElement('h3');heading.textContent='第八部分 · 动手步骤直达';list.append(heading);
+ const steps=document.createElement('div');steps.className='toc-grid toc-steps';
+ [[138,'先看成品：今天要做什么'],[140,'准备：安装 CodeBuddy、拿到项目'],[143,'第一轮：读项目、预览并修改标题'],[145,'第二轮：更新标题、增加筛选'],[147,'第三轮：查看保存位置'],[150,'自己验收，再决定是否发布']].forEach(([page,title])=>steps.append(tocLink(page,title)));list.append(steps);
+ const all=document.createElement('details'),summary=document.createElement('summary'),pages=document.createElement('div');all.className='toc-all-pages';summary.textContent='查看全部 '+total+' 页';all.append(summary,pages);all.addEventListener('toggle',()=>{if(all.open&&!pages.childElementCount)pageList(pages);});list.append(all);
+}
+function openToc(){renderToc();document.querySelector('#search').value='';toc.showModal();}
+document.querySelector('#tocButton').onclick=openToc;document.querySelectorAll('[data-open-toc]').forEach(b=>b.onclick=openToc);document.querySelector('#search').oninput=e=>renderToc(e.target.value);
 document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>document.getElementById(b.dataset.close).close());
 function sizeImage(){const im=document.querySelector('#zoomImage'),frame=document.querySelector('.image-view');im.style.width=Math.max(200,Math.min(natural,frame.clientWidth-30)*zoom)+'px';document.querySelector('#zoomValue').textContent=Math.round(zoom*100)+'%';}
 document.querySelectorAll('[data-image]').forEach(b=>b.onclick=()=>{const im=document.querySelector('#zoomImage');document.querySelector('#imageCaption').textContent=b.dataset.caption;document.querySelector('#originalLink').href=b.dataset.image;im.alt=b.dataset.caption;im.onload=()=>{natural=im.naturalWidth;sizeImage();};im.src=b.dataset.image;zoom=1;imageDialog.showModal();if(im.complete){natural=im.naturalWidth;sizeImage();}});
